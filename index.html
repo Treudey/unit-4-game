@@ -3,28 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game of Thrones RPG</title>
+  <title>Game of Thrones Duel</title>
+  <link rel="stylesheet" href="./assets/css/reset.css">
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   
-  <h1>Game of Thrones RPG</h1>
+  <h1>Game of Thrones Duel</h1>
+  
+  <div class="character-selection" >
+    <!--
+    <div class="character friendly" id="jaime">
+      <p class="name">Jaime Lannister</p>
+      <img src="./assets/images/Jaime-Lannister.jpg" alt="Jaime Lannister">
+      <p class="hp">120</p>
+    </div>
+    <div class="character friendly" id="hound">
+      <p class="name">The Hound</p>
+      <img src="./assets/images/thehound.jpg" alt="Sandor Glegane">
+      <p class="hp">180</p>
+    </div>
+    <div class="character friendly" id="drogo">
+      <p class="name">Khal Drogo</p>
+      <img src="./assets/images/khal-drogo.jpg" alt="Khal Drogo">
+      <p class="hp">150</p>
+    </div>
+    <div class="character friendly" id="jon">
+      <p class="name">Jon Snow</p>
+      <img src="./assets/images/jon-snow.jpg" alt="Jon Snow">
+      <p class="hp">100</p>
+    </div>
+  -->
+  </div>
 
-  <div class="character"></div>
-  <div class="character"></div>
-  <div class="character"></div>
-  <div class="character"></div>
 
   <h2>Your Character</h2>
-  <div id="selected-character"></div>
+  <div class="selected-div"></div>
 
-  <h2>Enemies Available to Attack</h2>
-  <div id="enemies"></div>
+  <h2>Enemies Available to Duel</h2>
+  <div class="enemies-div"></div>
 
   <h2>Fight Section</h2>
-  <button>Attack</button>
+  <button class="attack">ATTACK!</button>
 
-  <h2>Defender</h2>
-  
+  <h2>Challenger</h2>
+  <div class="challenger-div"></div>
+  <div class="text-div"></div>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="./assets/javascript/game.js"></script>
