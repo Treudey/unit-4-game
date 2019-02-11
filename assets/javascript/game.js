@@ -18,8 +18,8 @@ function gameSet() {
         id: "hound",
         name: "The Hound",
         HP: 180,
-        attack: 4,
-        attackPower: 4,
+        attack: 2,
+        attackPower: 2,
         counterAttack: 25,
         url: "./assets/images/thehound.jpg",
         isSelected: false,
@@ -30,8 +30,8 @@ function gameSet() {
         id: "drogo",
         name: "Khal Drogo",
         HP: 150,
-        attack: 5,
-        attackPower: 5,
+        attack: 4,
+        attackPower: 4,
         counterAttack: 20,
         url: "./assets/images/khal-drogo.jpg",
         isSelected: false,
@@ -42,8 +42,8 @@ function gameSet() {
         id: "jon",
         name: "Jon Snow",
         HP: 100,
-        attack: 10,
-        attackPower: 10,
+        attack: 12,
+        attackPower: 12,
         counterAttack: 5,
         url: "./assets/images/jon-snow.jpg",
         isSelected: false,
@@ -137,10 +137,12 @@ $(document).ready(function() {
     });
 
     $(".attack").on("click", function() {
-        // checks if theres is already a challenger first and that the game isn't already over;
-        if ($(".challenger").length && !isGameOver) {
+        // checks if the game is over first
+        if (isGameOver) {
+            return;
+        // checks if theres is a challenger present to attack
+        } else if ($(".challenger").length) {
             $(".text-div").empty();
-            console.log("attack");
             var selectedCharID = $(".selected").attr("id");
             var selectedChar = whichCharacter(selectedCharID);
             var challengerID = $(".challenger").attr("id");
@@ -149,6 +151,7 @@ $(document).ready(function() {
 
             if (allEnemiesDead()) {
                 $(".challenger-div").empty();
+                $(".text-div").next().empty();
                 addParaToTextDiv("You Won!!! GAME OVER!!!");
                 $("<button>").addClass("restart").text("Restart").appendTo(".text-div");
                 isGameOver = true;
@@ -163,24 +166,21 @@ $(document).ready(function() {
 
             selectedChar.HP -= challenger.counterAttack;
 
+            // checks if the player character has died
             if (selectedChar.HP <= 0) {
                 addParaToTextDiv("You have been defeated... GAME OVER!!!");
                 $("<button>").addClass("restart").text("Restart").appendTo(".text-div");
                 isGameOver = true;
 
             } else {
-                $(".challenger p.hp").text(challenger.HP);
                 addParaToTextDiv("You attacked " + challenger.name + " for " + selectedChar.attack + " damage!");
                 addParaToTextDiv(challenger.name + " attacked you back for " + challenger.counterAttack + " damage!");
                 selectedChar.attack += selectedChar.attackPower;
             }
 
+            $(".challenger p.hp").text(challenger.HP);
             $(".selected p.hp").text(selectedChar.HP);
             
-        } else if (isGameOver) {
-            console.log("nothing");
-            return;
-
         } else {
             $(".text-div").empty();
             addParaToTextDiv("There's no challenger here.");

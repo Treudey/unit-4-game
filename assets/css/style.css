@@ -6,61 +6,58 @@
 body {
     margin: .5rem;
     background-image: url(../images/throne-room.jpg);
+    background-position: center top;
     font-family: 'Game of Thrones', 'Times New Roman', Times, serif;
 }
 
+h2,
+.character,
+.name,
+.restart,
+.text-div { margin-top: .5rem; }
+
+h1, 
+h2, 
+.text-div { 
+    background-color: #111;
+    color: #D4AF37; 
+    width: max-content;
+}
+
 h1 {
-    color: #D4AF37;
-    font-size: 5rem;
-    margin: 1rem;
+    font-size: 3.5rem;
+    margin: .1rem;
     text-align: center;
+    padding-top: .55rem;
 }
 
 h2 {
-    color: #D4AF37;
-    font-size: 2rem;
-    margin-top: 2rem;
+    font-size: 1.5rem;
+    padding-top: .4rem;
 }
-
-img {
-    height: 9.4rem;
-    width: 15rem;
-}
-
-button {
-    color: #111;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 1.4rem;
-    margin-top: 2rem;
-    border: 1px solid #111;
-    font-weight: bold;
-}
-
-.attack { background-color: #B20000; }
-#restart { background-color: #4169E1; }
 
 .character {
     display: inline-block;
     vertical-align: top;
-    height: 12.5rem;
-    width: 19rem;
+    height: 11.8rem;
+    width: 17.5rem;
     text-align: center;
-    line-height: 1;
-    margin-top: 1rem;
 }
 
-.name { margin-top: .5rem; }
-
-.hp {
-    font-size: 1.3rem;
-    margin-top: 0; 
+img {
+    height: 8.8rem;
+    width: 14rem;
 }
+
+.hp,
+.text-div { font-size: 1.3rem; }
 
 .friendly,
-.selected {
-    background-color: whitesmoke;
-    border: 3px solid green;
-}
+.selected { background-color: whitesmoke; }
+
+.friendly,
+.selected,
+.challenger { border: 3px solid green; }
 
 .enemy {
     background-color: #E60000;
@@ -70,19 +67,95 @@ button {
 .challenger {
     color: whitesmoke;
     background-color: #111;
-    border: 3px solid green;
 }
 
-.challenger-div { 
-    height: 13rem;
-    width: 20rem;
-}
-
-.text-div {
-    color: #D4AF37;
-    margin-top: 1rem;
-    line-height: 1.2;
-    font-size: 1.3rem;
+button,
+.text-div { 
     font-weight: bold;
     font-family: 'Times New Roman', Times, serif;
+}
+
+.text-div { line-height: 1.2; }
+
+button {
+    color: #111;
+    font-size: 1.4rem;
+    border: 1px solid #111;
+}
+
+.attack { 
+    margin-top: 1rem;
+    background-color: #B20000; 
+}
+
+.restart { background-color: #4169E1; }
+
+/* ------------ Media Queries -------------- */
+
+@media only screen and (max-width: 1200px) {
+    
+    h1 { font-size: 3rem; }
+
+    h2, 
+    button { font-size: 1.3rem; }
+
+    h2 { margin-top: 1rem; }
+
+    .character {
+        height: 10rem;
+        width: 15.7rem;
+        margin-top: .4rem;
+    }
+
+    .name { 
+        font-size: .9rem;
+        margin-top: .2rem;
+        margin-bottom: .1rem; 
+    }
+
+    img {
+        height: 7.5rem;
+        width: 12rem;
+    }
+
+    .hp { font-size: 1.1rem; }
+
+    .challenger { margin-right: .5rem; }
+
+    .attack,
+    .restart { margin-top: .6rem; }
+
+    .challenger-div,
+    .text-div { display: inline-block; }
+
+    .challenger-div { vertical-align: top; }
+}
+
+@media only screen and (max-width: 992px) {
+
+    h2 { font-size: 1.5rem; }
+
+    .character {
+        height: 11.4rem;
+        width: 17rem;
+    }
+
+    .name { 
+        font-size: 1rem;
+        margin-top: .4rem;
+    }
+
+    img {
+        height: 8.5rem;
+        width: 13.5rem;
+    }
+
+    .hp { font-size: 1.3rem; }
+
+    button { font-size: 1.6rem; }
+
+    .challenger-div,
+    .text-div { display: block; }
+
+    .text-div {  margin-left: 0; }
 }
