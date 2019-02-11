@@ -151,7 +151,7 @@ $(document).ready(function() {
 
             if (allEnemiesDead()) {
                 $(".challenger-div").empty();
-                $(".text-div").next().empty();
+                $(".text-div").next().hide();
                 addParaToTextDiv("You Won!!! GAME OVER!!!");
                 $("<button>").addClass("restart").text("Restart").appendTo(".text-div");
                 isGameOver = true;
@@ -189,6 +189,7 @@ $(document).ready(function() {
 
     $(document).on("click", ".restart", function() {
         $("div").empty();
+        $(".text-div").next().show();
         gameSet();
     });
 
