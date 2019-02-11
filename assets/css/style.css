@@ -32,10 +32,12 @@ button {
     font-family: 'Times New Roman', Times, serif;
     font-size: 1.4rem;
     margin-top: 2rem;
-    background-color: #B20000;
     border: 1px solid #111;
     font-weight: bold;
 }
+
+.attack { background-color: #B20000; }
+#restart { background-color: #4169E1; }
 
 .character {
     display: inline-block;

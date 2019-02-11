@@ -1,19 +1,4 @@
-/****Algorithm
- * 
- * Make 'character' objects with properties for health, attack, img, etc.
- * Make 'character' divs respond to click events
- * One you click on goes into "Your Character" section while other 3 go into "Enemies Available to attack"
- * Have click event so that enemy you click moves into "challenger" area
- * Make attack button have click event that makes Attacker and challenger battle
- * "Your character" will subtract his attack fromchallenger's HP and then vice versa
- * Set Lose condition for your chrarcter's HP dropping to 0 or less
- * Have win condition for defeating achallenger if HP goes to 0 or less
- * Have global win condition for all three "enemies" being defeated
- * 
- * 
- */
-
-var jaime, hound, drogo, jon, charList;
+var jaime, hound, drogo, jon, charList, enemies, isGameOver;
 
 // initializes all the variables, creates the intial character divs, and displays them in the 'character-selection' div
 function gameSet() {
@@ -66,10 +51,11 @@ function gameSet() {
         isChallenger: false
     };
     charList = [jaime, hound, drogo, jon];
+    enemies = [];
+    isGameOver = false;
 
-    for (let i = 0; i < charList.length; i++) {
+    for (var i = 0; i < charList.length; i++) {
         createCharDiv(charList[i]);
-        
     }
 }
 
@@ -91,7 +77,7 @@ function createCharDiv(character) {
     }
 }
 
-// takes an character div id and determines the object associated with it
+// takes an character div id and returns the object associated with it
 function whichCharacter(divID) {
     for (var i = 0; i < charList.length; i++) {
         if (divID === charList[i].id) {
@@ -100,58 +86,110 @@ function whichCharacter(divID) {
     }
 }
 
+// checks if all enemies are dead and returns true or false
+function allEnemiesDead() {
+    var deaths = 0;
+    for (let i = 0; i < enemies.length; i++) {
+        if (enemies[i].HP <= 0) {
+            deaths++;
+        }
+    }
+    return deaths === 3;
+}
 
+// creates a new prargraph with text of whatever is passed into it and appends it to the 'text-div'
+function addParaToTextDiv(input) {
+    $("<p>").text(input).appendTo(".text-div");
+}
 
 $(document).ready(function() {
     
     gameSet();
 
     // apends the clicked upon character to the 'selected-div' and moves the rest to the 'enemies-div'
-    $(".friendly").on("click", function() {
+    $(document).on("click", ".friendly", function() {
         var id = $(this).attr("id");
-        var character = whichCharacter(id);
+        var selectedChar = whichCharacter(id);
         $(".character-selection").empty();
-        character.isSelected = true;
+        selectedChar.isSelected = true;
         for (var i = 0; i < charList.length; i++) {
-            if (!charList[i].isSelected) {
-                charList[i].isEnemy = true;
+            var selectedChar = charList[i];
+            if (!selectedChar.isSelected) {
+                selectedChar.isEnemy = true;
+                enemies.push(selectedChar);
             }
-            createCharDiv(charList[i]);
+            createCharDiv(selectedChar);
         }
     });
 
     // appends the 'enemy' div clicked on to the 'challenger-div' and remove it from 'enemies-div'
-    $(document).on('click', '.enemy', function() {
+    $(document).on("click", ".enemy", function() {
         // checks if theres is already a challenger first
         if (!$(".challenger").length) {
             $(".text-div").empty();
             var id = $(this).attr("id");
-            var character = whichCharacter(id);
-            character.isEnemy = false;
-            character.isChallenger = true;
+            var challenger = whichCharacter(id);
+            challenger.isEnemy = false;
+            challenger.isChallenger = true;
             $(this).remove();
-            createCharDiv(character);
+            createCharDiv(challenger);
         }
     });
 
     $(".attack").on("click", function() {
-        $(".text-div").empty();
-        // checks if theres is already a challenger first
-        if ($(".challenger").length) {
-            var attackerID = $(".selected").attr("id");
+        // checks if theres is already a challenger first and that the game isn't already over;
+        if ($(".challenger").length && !isGameOver) {
+            $(".text-div").empty();
+            console.log("attack");
+            var selectedCharID = $(".selected").attr("id");
+            var selectedChar = whichCharacter(selectedCharID);
             var challengerID = $(".challenger").attr("id");
-            var attacker = whichCharacter(attackerID);
             var challenger = whichCharacter(challengerID);
-            challenger.HP -= attacker.attack;
-            attacker.HP -= challenger.counterAttack;
-            $(".challenger p.hp").text(challenger.HP);
-            $(".selected p.hp").text(attacker.HP);
-            $("<p>").text("You attacked " + challenger.name + " for " + attacker.attack + " damage!").appendTo(".text-div");
-            $("<p>").text(challenger.name + " attacked you back for " + challenger.counterAttack + " damage!").appendTo(".text-div");
-            attacker.attack += attacker.attackPower;
+            challenger.HP -= selectedChar.attack;
+
+            if (allEnemiesDead()) {
+                $(".challenger-div").empty();
+                addParaToTextDiv("You Won!!! GAME OVER!!!");
+                $("<button>").addClass("restart").text("Restart").appendTo(".text-div");
+                isGameOver = true;
+                return;
+
+            } else if (challenger.HP <= 0) {
+                $(".challenger-div").empty();
+                addParaToTextDiv("You have defeated " + challenger.name + " . You can choose another enemy to fight.");
+                selectedChar.attack += selectedChar.attackPower;
+                return;
+            }
+
+            selectedChar.HP -= challenger.counterAttack;
+
+            if (selectedChar.HP <= 0) {
+                addParaToTextDiv("You have been defeated... GAME OVER!!!");
+                $("<button>").addClass("restart").text("Restart").appendTo(".text-div");
+                isGameOver = true;
+
+            } else {
+                $(".challenger p.hp").text(challenger.HP);
+                addParaToTextDiv("You attacked " + challenger.name + " for " + selectedChar.attack + " damage!");
+                addParaToTextDiv(challenger.name + " attacked you back for " + challenger.counterAttack + " damage!");
+                selectedChar.attack += selectedChar.attackPower;
+            }
+
+            $(".selected p.hp").text(selectedChar.HP);
+            
+        } else if (isGameOver) {
+            console.log("nothing");
+            return;
+
         } else {
-            $("<p>").text("There's no challenger here.").appendTo(".text-div");
+            $(".text-div").empty();
+            addParaToTextDiv("There's no challenger here.");
         }
+    });
+
+    $(document).on("click", ".restart", function() {
+        $("div").empty();
+        gameSet();
     });
 
 });
