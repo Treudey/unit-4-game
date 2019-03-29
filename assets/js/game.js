@@ -1,80 +1,90 @@
 var jaime, hound, drogo, jon, charList, enemies, isGameOver;
 
-// initializes all the variables, creates the intial character divs, and displays them in the 'character-selection' div
-function gameSet() {
-    jaime = {
-        id: "jaime",
-        name: "Jaime Lannister",
-        HP: 120,
-        attack: 8,
-        attackPower: 8,
-        counterAttack: 10,
-        url: "./assets/images/Jaime-Lannister.jpg",
-        isSelected: false,
-        isEnemy: false,
-        isChallenger: false
+function initialize() {
+    // Character constructor function
+    var Character = function(id, name, HP, attack, counterAttack, img) {
+        this.id = id;
+        this.name = name;
+        this.HP = HP;
+        this.startingHP = HP;
+        this.attack = attack;
+        this.attackPower = attack;
+        this.counterAttack = counterAttack;
+        this.img = img;
+        this.state = "friendly";
     };
-    hound = {
-        id: "hound",
-        name: "The Hound",
-        HP: 180,
-        attack: 2,
-        attackPower: 2,
-        counterAttack: 25,
-        url: "./assets/images/thehound.jpg",
-        isSelected: false,
-        isEnemy: false,
-        isChallenger: false
-    };
-    drogo = {
-        id: "drogo",
-        name: "Khal Drogo",
-        HP: 150,
-        attack: 4,
-        attackPower: 4,
-        counterAttack: 20,
-        url: "./assets/images/khal-drogo.jpg",
-        isSelected: false,
-        isEnemy: false,
-        isChallenger: false
-    };
-    jon = {
-        id: "jon",
-        name: "Jon Snow",
-        HP: 100,
-        attack: 12,
-        attackPower: 12,
-        counterAttack: 5,
-        url: "./assets/images/jon-snow.jpg",
-        isSelected: false,
-        isEnemy: false,
-        isChallenger: false
-    };
+    
+    // creates each of the Character objects
+    jaime = new Character("jaime", "Jaime Lannister", 120, 8, 10, 
+                            "./assets/images/Jaime-Lannister.jpg");
+    hound = new Character("hound", "The Hound", 180, 2, 25,
+                            "./assets/images/thehound.jpg");
+    drogo = new Character("drogo", "Khal Drogo", 150, 4, 20, 
+                            "./assets/images/khal-drogo.jpg");
+    jon = new Character("jon", "Jon Snow", 100, 12, 5, 
+                        "./assets/images/jon-snow.jpg");
+
     charList = [jaime, hound, drogo, jon];
+
+    setValues();
+
+    createInitialCharDivs();
+}
+
+function setValues() {
     enemies = [];
     isGameOver = false;
-
-    for (var i = 0; i < charList.length; i++) {
-        createCharDiv(charList[i]);
-    }
 }
 
 // creates a new chracter div based on the object passed into it and appends it to the appropriate div
 function createCharDiv(character) {
+    
     var newDiv = $("<div>").attr("id", character.id);
     $("<p>").addClass("name").text(character.name).appendTo(newDiv);
-    $("<img>").attr({src: character.url, alt: character.name}).appendTo(newDiv);
+    $("<img>").attr({src: character.img, alt: character.name}).appendTo(newDiv);
     $("<p>").addClass("hp").text(character.HP).appendTo(newDiv);
 
-    if (character.isSelected) {
-        newDiv.addClass("character selected").appendTo(".selected-div");
-    } else if (character.isEnemy) {
-        newDiv.addClass("character enemy").appendTo(".enemies-div");
-    } else if (character.isChallenger) {
-        newDiv.addClass("character challenger").appendTo(".challenger-div"); 
-    } else {
-        newDiv.addClass("character friendly").appendTo(".character-selection");
+    switch (character.state) {
+        case "selected":
+            newDiv.addClass("character selected").appendTo(".selected-div");
+            break;
+        case "enemy":
+            newDiv.addClass("character enemy").appendTo(".enemies-div");
+            break;
+        case "challenger":
+            newDiv.addClass("character challenger").appendTo(".challenger-div");
+            break;
+        case "friendly":
+            newDiv.addClass("character friendly").appendTo(".character-selection");
+            break;
+        default:
+            break;
     }
+}
+
+function createInitialCharDivs() {
+    for (var i = 0; i < charList.length; i++) { 
+        createCharDiv(charList[i]);
+    }
+}
+
+function resetCharacters() {
+    for (var i = 0; i < charList.length; i++) { 
+        var currChar = charList[i];
+        currChar.HP = currChar.startingHP;
+        currChar.attack = currChar.attackPower;
+        currChar.state = "friendly";
+        
+    }
+}
+
+// initializes all the variables, creates the intial character divs, and displays them in the 'character-selection' div
+function resetGame() {
+    
+
+    setValues();
+    resetCharacters();
+    createInitialCharDivs();
 }
 
 // takes an character div id and returns the object associated with it
@@ -94,7 +104,7 @@ function allEnemiesDead() {
             deaths++;
         }
     }
-    return deaths === 3;
+    return deaths === enemies.length;
 }
 
 // creates a new prargraph with text of whatever is passed into it and appends it to the 'text-div'
@@ -104,18 +114,18 @@ function addParaToTextDiv(input) {
 
 $(document).ready(function() {
     
-    gameSet();
+    initialize();
 
     // apends the clicked upon character to the 'selected-div' and moves the rest to the 'enemies-div'
     $(document).on("click", ".friendly", function() {
         var id = $(this).attr("id");
         var selectedChar = whichCharacter(id);
         $(".character-selection").empty();
-        selectedChar.isSelected = true;
+        selectedChar.state = "selected";
         for (var i = 0; i < charList.length; i++) {
             var selectedChar = charList[i];
-            if (!selectedChar.isSelected) {
-                selectedChar.isEnemy = true;
+            if (selectedChar.state !== "selected") {
+                selectedChar.state = "enemy";
                 enemies.push(selectedChar);
             }
             createCharDiv(selectedChar);
@@ -129,8 +139,7 @@ $(document).ready(function() {
             $(".text-div").empty();
             var id = $(this).attr("id");
             var challenger = whichCharacter(id);
-            challenger.isEnemy = false;
-            challenger.isChallenger = true;
+            challenger.state = "challenger";
             $(this).remove();
             createCharDiv(challenger);
         }
@@ -190,7 +199,7 @@ $(document).ready(function() {
     $(document).on("click", ".restart", function() {
         $("div").empty();
         $(".text-div").next().show();
-        gameSet();
+        resetGame();
     });
 
 });
