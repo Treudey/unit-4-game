@@ -14,17 +14,15 @@ function initialize() {
         this.state = "friendly";
     };
     
-    // creates each of the Character objects
-    jaime = new Character("jaime", "Jaime Lannister", 120, 8, 10, 
-                            "./assets/images/Jaime-Lannister.jpg");
-    hound = new Character("hound", "The Hound", 180, 2, 25,
-                            "./assets/images/thehound.jpg");
-    drogo = new Character("drogo", "Khal Drogo", 150, 4, 20, 
-                            "./assets/images/khal-drogo.jpg");
-    jon = new Character("jon", "Jon Snow", 100, 12, 5, 
-                        "./assets/images/jon-snow.jpg");
-
-    charList = [jaime, hound, drogo, jon];
+    // each of the Character objects is created and stored inside a character array
+    charList = [jaime = new Character("jaime", "Jaime Lannister", 120, 8, 10, 
+                "./assets/images/Jaime-Lannister.jpg"),
+                hound = new Character("hound", "The Hound", 180, 2, 25,
+                "./assets/images/thehound.jpg"),
+                drogo = new Character("drogo", "Khal Drogo", 150, 4, 20, 
+                "./assets/images/khal-drogo.jpg"),
+                jon = new Character("jon", "Jon Snow", 100, 12, 5, 
+                "./assets/images/jon-snow.jpg")];
 
     setValues();
 
@@ -74,13 +72,11 @@ function resetCharacters() {
         currChar.HP = currChar.startingHP;
         currChar.attack = currChar.attackPower;
         currChar.state = "friendly";
-        
     }
 }
 
 // initializes all the variables, creates the intial character divs, and displays them in the 'character-selection' div
 function resetGame() {
-    
 
     setValues();
     resetCharacters();
@@ -201,5 +197,4 @@ $(document).ready(function() {
         $(".text-div").next().show();
         resetGame();
     });
-
 });
