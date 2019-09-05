@@ -89,7 +89,7 @@ function whichCharacter(divID) {
 // checks if all enemies are dead and returns true or false
 function allEnemiesDead() {
     var deaths = 0;
-    for (let i = 0; i < enemies.length; i++) {
+    for (var i = 0; i < enemies.length; i++) {
         if (enemies[i].HP <= 0) {
             deaths++;
         }
